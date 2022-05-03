@@ -14,7 +14,7 @@ class App extends React.Component {
     this.socket = io('ws://localhost:8000', { transports: ["websocket"] });
     this.socket.on('updateData', data => this.updateTasks(data));
     this.socket.on('removeTasks', id => this.removeTask(id));
-    this.socket.on('addTask', task => this.addTask(task));
+    this.socket.on('addTask', newTasks => this.addTask(newTasks));
     this.socket.on('updateTask', task => this.updateTask(task));
   };
 
@@ -32,9 +32,17 @@ class App extends React.Component {
   };
 
   addTask = task => {
-    this.setState({
-      tasks: [...this.state.tasks, task],
-    });
+    let newTasks = this.state.tasks;
+    const repeatedTag = newTasks.find(newTask => newTask.name === task.name);
+
+    if (!task.name || !task.name.trim()) {
+      alert('You have to type something first!');
+    } else if (repeatedTag) {
+      alert('Your task is already on the list!');
+    } else {
+      newTasks.push(task);
+      this.setState({ tasks: newTasks })
+    }
   }
 
   editTask = newName => {

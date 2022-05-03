@@ -28,4 +28,9 @@ io.on('connection', (socket) => {
         tasks.splice(taskIdIndex, 1);
         socket.broadcast.emit('removeTask', taskId);
     });
+    
+    socket.on('updateTask', (task) => {
+      tasks.push(task);
+      socket.broadcast.emit('updateTask', task);
+    });
 });
